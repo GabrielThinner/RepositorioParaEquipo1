@@ -1,0 +1,6 @@
+#INGRESA 2 NUÚMEROS Y EL PROGRAMA LO SUMARA
+Pri_num = int(input("Ingresa el primer número: "))
+Seg_num = int(input("Ingresa el segundo número: "))
+
+suma= Pri_num+Seg_num
+print ("La suma total es de:" , suma)
