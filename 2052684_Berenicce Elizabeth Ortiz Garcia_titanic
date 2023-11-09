@@ -1,0 +1,188 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "private_outputs": true,
+      "provenance": [],
+      "toc_visible": true,
+      "authorship_tag": "ABX9TyO+5LPO8AJlJtRwncL2ORTp",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/GabrielThinner/RepositorioParaEquipo1/blob/main/2052684_Berenicce%20Elizabeth%20Ortiz%20Garcia_titanic\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd\n",
+        "\n",
+        "import io"
+      ],
+      "metadata": {
+        "id": "CKYLvKNCl9QR"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from google.colab import files"
+      ],
+      "metadata": {
+        "id": "zqomlhCJmCts"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "uploaded = files.upload ()"
+      ],
+      "metadata": {
+        "id": "0o_yX2kamjde"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df = pd.read_csv(io.StringIO(uploaded['titanic.csv'].decode('latin-1')))"
+      ],
+      "metadata": {
+        "id": "QYgWPnFCmsYc"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df"
+      ],
+      "metadata": {
+        "id": "9BwPI8AFm7OY"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.shape"
+      ],
+      "metadata": {
+        "id": "wr9xvsXpm_k9"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print (len(df))"
+      ],
+      "metadata": {
+        "id": "xUmmfOBanH74"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print(df.shape[1])"
+      ],
+      "metadata": {
+        "id": "wgOvb3RgnUEG"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.head()"
+      ],
+      "metadata": {
+        "id": "FgQoYIDJndzR"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.tail()"
+      ],
+      "metadata": {
+        "id": "H7RNf3wSniTw"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df['name']"
+      ],
+      "metadata": {
+        "id": "cWM1UBE2nyZD"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df['age']"
+      ],
+      "metadata": {
+        "id": "n7rLT-s8oMcc"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df['name'],['age']"
+      ],
+      "metadata": {
+        "id": "0jv5E3_2oReq"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df['name'] = df['name'].str.upper()"
+      ],
+      "metadata": {
+        "id": "KJzBXRkPoYi0"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
