@@ -1,0 +1,99 @@
+import sqlite3
+import openpyxl
+from datetime import datetime
+
+def crear_tabla():
+    # Conecta a la base de datos (o la crea si no existe)
+    conexion = sqlite3.connect("citas_hotel.db")
+    cursor = conexion.cursor()
+
+    # Crea la tabla si no existe
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS citas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre TEXT,
+            fecha_entrada TEXT,
+            hora_entrada TEXT,
+            fecha_salida TEXT,
+            hora_salida TEXT
+        )
+    ''')
+
+    # Guarda los cambios y cierra la conexión
+    conexion.commit()
+    conexion.close()
+
+def agregar_cita(nombre, fecha_entrada, hora_entrada, fecha_salida, hora_salida):
+    # Conecta a la base de datos
+    conexion = sqlite3.connect("citas_hotel.db")
+    cursor = conexion.cursor()
+
+    # Inserta una nueva cita en la base de datos
+    cursor.execute('''
+        INSERT INTO citas (nombre, fecha_entrada, hora_entrada, fecha_salida, hora_salida)
+        VALUES (?, ?, ?, ?, ?)
+    ''', (nombre, fecha_entrada, hora_entrada, fecha_salida, hora_salida))
+
+    # Guarda los cambios y cierra la conexión
+    conexion.commit()
+    conexion.close()
+
+def exportar_a_excel():
+    # Conecta a la base de datos
+    conexion = sqlite3.connect("citas_hotel.db")
+    cursor = conexion.cursor()
+
+    # Obtiene todas las citas de la base de datos
+    cursor.execute("SELECT * FROM citas")
+    filas = cursor.fetchall()
+
+    # Crea un nuevo libro de Excel y hoja
+    libro_excel = openpyxl.Workbook()
+    hoja = libro_excel.active
+    hoja.title = "Citas Hotel"
+
+    # Encabezados
+    encabezados = ["ID", "Nombre", "Fecha Entrada", "Hora Entrada", "Fecha Salida", "Hora Salida"]
+    hoja.append(encabezados)
+
+    # Agrega las filas de la base de datos al archivo Excel
+    for fila in filas:
+        hoja.append(fila)
+
+    # Guarda el archivo Excel
+    archivo_excel = "citas_hotel.xlsx"
+    libro_excel.save(archivo_excel)
+
+    # Cierra la conexión a la base de datos
+    conexion.close()
+
+    print(f"Datos exportados a {archivo_excel} con éxito.")
+
+if _name_ == "_main_":
+    crear_tabla()
+
+    while True:
+        print("\nMenú:")
+        print("1. Agregar cita")
+        print("2. Exportar a Excel")
+        print("3. Salir")
+
+        opcion = input("Ingrese el número de la opción: ")
+
+        if opcion == "1":
+            nombre = input("Ingrese el nombre del arrendador: ")
+            fecha_entrada = input("Ingrese la fecha de entrada (formato YYYY-MM-DD): ")
+            hora_entrada = input("Ingrese la hora de entrada (formato HH:MM): ")
+            fecha_salida = input("Ingrese la fecha de salida (formato YYYY-MM-DD): ")
+            hora_salida = input("Ingrese la hora de salida (formato HH:MM): ")
+
+            agregar_cita(nombre, fecha_entrada, hora_entrada, fecha_salida, hora_salida)
+
+        elif opcion == "2":
+            exportar_a_excel()
+
+        elif opcion == "3":
+            break
+
+        else:
+            print("Opción no válida. Inténtelo de nuevo.")
