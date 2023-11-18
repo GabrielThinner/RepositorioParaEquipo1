@@ -17,7 +17,6 @@ from datetime import (date,
 import openpyxl
 
 
-
 def Crear_tabla():
 
     try:
