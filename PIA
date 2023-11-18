@@ -1,0 +1,165 @@
+import random as rd
+import sys
+import datetime
+import sqlite3
+from sqlite3 import Error
+from datetime import date, datetime, timedelta
+import openpyxl
+
+def create_table():
+    """
+    Create tables in the CyberCafeDB database.
+    """
+    try:
+        with sqlite3.connect("CyberCafeDB") as conn:
+            cursor = conn.cursor()
+
+            cursor.execute("CREATE TABLE IF NOT EXISTS Users(id INTEGER PRIMARY KEY, name TEXT NOT NULL);")
+            cursor.execute("CREATE TABLE IF NOT EXISTS Computers(id INTEGER PRIMARY KEY, name TEXT NOT NULL, status TEXT NOT NULL);")
+            cursor.execute("CREATE TABLE IF NOT EXISTS Reservations(id INTEGER PRIMARY KEY, user_id INTEGER NOT NULL, computer_id INTEGER NOT NULL, schedule TEXT NOT NULL, date timestamp);")
+
+            print("Tables created successfully")
+
+    except Error as e:
+        print(e)
+    except:
+        print(f"An error occurred: {sys.exc_info()[0]}")
+    finally:
+        conn.close()
+
+def register_reservation():
+    """
+    Register a computer reservation.
+    """
+    while True:
+        try:
+            user_id = int(input("Enter your user ID: "))
+        except ValueError:
+            print("Please enter a valid numeric user ID.")
+            continue
+
+        try:
+            with sqlite3.connect("CyberCafeDB") as conn:
+                cursor = conn.cursor()
+                values = {"user_id": user_id}
+                cursor.execute("SELECT * FROM Users WHERE id = :user_id", values)
+                user_record = cursor.fetchall()
+
+                if user_record:
+                    for user_id, username in user_record:
+                        print(f"User ID: {user_id}\tUsername: {username}")
+                else:
+                    print(f"No user found associated with ID {user_id}")
+        except Error as e:
+            print(e)
+        except:
+            print(f"An error occurred: {sys.exc_info()[0]}")
+        else:
+            computer_name = input("Enter the computer name (Type 'EXIT' to return to the menu): ")
+
+            if not computer_name:
+                continue
+            elif computer_name.upper() == 'EXIT':
+                return
+            else:
+                schedule = input("Enter the schedule [M, V, N]: ")
+                print(schedule)
+
+                input_date = input("Enter the reservation date (dd/mm/yyyy): ")
+                reservation_date = datetime.strptime(input_date, '%d/%m/%Y')
+
+                current_date = datetime.today()
+                allowed_date = datetime.now() + timedelta(days=2)
+
+                if reservation_date < allowed_date:
+                    print("You must make the reservation with a minimum of 2 days in advance.")
+                else:
+                    level = rd.randint(1, 99)
+
+                    try:
+                        with sqlite3.connect("CyberCafeDB") as conn:
+                            cursor = conn.cursor()
+                            reservation_data = {"id": level, "user_id": user_id, "computer_id": computer_id, "schedule": schedule, "date": reservation_date}
+                            cursor.execute("INSERT INTO Reservations VALUES(:id, :user_id, :computer_id, :schedule, :date)", reservation_data)
+                    except Error as e:
+                        print(e)
+                    except:
+                        print(f"An error occurred: {sys.exc_info()[0]}")
+                    finally:
+                        if conn:
+                            conn.close()
+
+                            confirm_date = input("Confirm the date (dd/mm/yyyy): ")
+                            confirm_date = datetime.strptime(confirm_date, "%d/%m/%Y").date()
+                            print("Reservation made successfully!")
+
+                            try:
+                                with sqlite3.connect("CyberCafeDB", detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES) as conn:
+                                    cursor = conn.cursor()
+                                    criteria = {"date": confirm_date}
+                                    cursor.execute("SELECT id, user_id, computer_id, schedule, date FROM Reservations WHERE DATE(date) = :date;", criteria)
+                                    records = cursor.fetchall()
+
+                                    for id, user_id, computer_id, schedule, date in records:
+                                        print(f"ID = {id}, Type of data: {type(id)}")
+                                        print(f"User ID = {user_id}, Type of data: {type(user_id)}")
+                                        print(f"Computer ID = {computer_id}, Type of data: {type(computer_id)}")
+                                        print(f"Schedule = {schedule}, Type of data: {type(schedule)}")
+                                        print(f"Date = {date}, Type of data: {type(date)}")
+
+                                    for id, user_id, computer_id, schedule, date in records:
+                                        print(f"{id}\t {user_id}\t {computer_id}\t {schedule}\t {date}\t")
+
+                                        return
+
+                            except sqlite3.Error as e:
+                                print(e)
+                            except Exception:
+                                print(f"An error occurred: {sys.exc_info()[0]}")
+                            finally:
+                                if conn:
+                                    conn.close()
+                                    print("Connection closed")
+
+def modify_descriptions():
+    """
+    Modify reservation descriptions.
+    """
+    while True:
+        # Implementation...
+
+# Other functions...
+
+def main_menu():
+    """
+    Display the main menu and handle user input.
+    """
+    print("Connection Established")
+    create_table()
+    print("*" * 20)
+    print("1. Register Reservation\n"
+          "2. Modify Reservation Descriptions\n"
+          "3. Check Available Dates\n"
+          "4. Report of Reservations for a Date\n"
+          "5. Register Computer\n"
+          "6. Register User\n"
+          "7. Exit\n"
+          "8. Delete Reservation\n"
+          "9. Export Database to Excel\n")
+
+    while True:
+        try:
+            option = int(input("Select the number of the action you want to perform: "))
+        except Error as e:
+            print(e)
+        except:
+            print(f"An error occurred: {sys.exc_info()[0]}")
+        else:
+            if option == 1:
+                register_reservation()
+            elif option == 2:
+                modify_descriptions()
+            # Add other options...
+
+if __name__ == "__main__":
+    main_menu()
